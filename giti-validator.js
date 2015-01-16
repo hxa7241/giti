@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------
 
    GITI Validator
-   Harrison Ainsworth / HXA7241 : 2013-06
+   Harrison Ainsworth / HXA7241 : 2013-06, 2015-01
 
    http://www.hxa.name/tools
 
@@ -134,7 +134,7 @@ var GitiValidator = function()
    var doVersion = function( value, token, lineNumber )
    {
       var warn;
-      if( value != "e-3.2" )
+      if( (value != "e-3.2") && (value != "e-3.3") )
       {
          warn = makeWarn( "non-expected annotation version", value, token,
             lineNumber );
@@ -201,7 +201,13 @@ var GitiValidator = function()
    var doTempo = function( value, token, lineNumber )
    {
       var warn;
-      if( !( /^\d{1,2}\.\d{1,3}$/.test( value ) ) )
+
+      var parse = /^(\d{1,2})([.=])(\d{1,3})$/.exec( value ) || ["","","",""];
+      var num1   = parse[1] || "";
+      var symbol = parse[2] || "";
+      var num2   = parse[3] || "";
+
+      if( !parse[0] || ((symbol == "=") && ((num1 < 1) || (num2 < 1))) )
       {
          warn = makeWarn( "invalid annotation tempo", value, token,
             lineNumber );
@@ -271,7 +277,7 @@ var GitiValidator = function()
          }
          else
          {
-            if( !( /^[pdhusti].*$/.test( act ) ) )
+            if( !( /^[pdhuwsti].*$/.test( act ) ) )
             {
                warns = concat( warns,
                   makeWarn( "invalid sound act, invalid basic",
@@ -351,7 +357,7 @@ var GitiValidator = function()
    {
       var warns = [];
 
-      if( time )
+      if( time && (time != ":-") )
       {
          var parse = /^:(\d{1,3})(.*)$/.exec( time ) || ["","",""];
          var basic = parse[1] || "";
