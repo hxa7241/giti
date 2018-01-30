@@ -1,0 +1,147 @@
+
+GITI tool : Engineering Documentation
+======================================================================
+
+
+"GITI tool" ; hxa7241 ; 2017 / OCaml / software .
+
+Harrison Ainsworth / HXA7241 : 2017  
+http://www.hxa.name/giti
+
+2018-01-26T11:23Z
+
+
+
+
+Contents
+--------
+
+* Overview
+* Modules
+* Giti
+* Parsing modules
+* Print module
+
+
+
+
+Overview
+--------
+
+Core datastructure: heterogeneous tree -- each object a different type, containing others. Following the spec, at http://www.hxa.name/giti :
+
+* Piece
+   * Sound
+      * Act
+         * basics
+         * extras
+      * Pitch
+         * basics
+         * extras
+      * Time
+         * basics
+         * extras
+   * Indicator
+      * Bar
+      * Segment
+      * Tuplet
+   * Annotation
+      * Version
+      * Tuning
+      * Tempo
+   * Metadata
+   * Comment
+   * (blank lines)
+
+Core algorithm (twofold): parse and print -- read a string into the datastructure, and write the datastructure to a string.
+
+~2500 lines of code.
+
+
+
+
+Modules
+-------
+
+Grouped, and in dependency order:
+
+* (application specific)
+   * Giti
+   * Print
+* (spec object parsing -- each defines an algebraic-DT and a create function)
+   * Piece
+   * Annotation
+   * Indicator
+   * Sound
+   * Act
+   * Pitch
+   * Time
+* (application specific lib)
+   * Basics
+      * bounded numbers -- guaranteed within lower and upper bounds
+      * constrained strings -- sets of string 'tokens'
+* (general stdlib augmentation)
+   * HxaGeneral
+
+
+
+
+Giti
+----
+
+Main entry-point module. Implements command-line interface and invokes parsing and transforms. (Reads and writes files rather than stdio.).
+
+7:1 scale code:
+
+    % declare user messages
+    - read CLI options
+       ? is help request
+          - print help
+          - else execute
+             % declare functions
+             % declare values
+             ? handle options
+                - validate
+                   - read file, invoke Piece, write file
+                - translate
+                   - read file, invoke Piece and Print, write file
+                - unrecognised
+             - write messages
+
+
+
+
+Parsing modules
+---------------
+
+Mirrors the main data-structure-type-tree (inexactly: some elisions): a set of modules, each taking string data, and producing a specific algebraic datatype (by recursively invoking modules on contained subtypes).
+
+Dependency tree of parsing modules -- each implements the parenthised, and delegates to the indented:
+
+* Piece (metadata, comments, blank-lines)
+   * Annotation (version, tuning, tempo)
+   * Indicator (bar, segment, tuplet)
+   * Sound (continuation, rest, or ordinary)
+      * Act (basic, extra)
+      * Pitch (list of: basic, extra)
+      * Time (basic, extra)
+
+
+
+
+Print module
+------------
+
+Mirrors the main data-structure-type-tree (inexactly: some elisions): a set of functions, each taking its corresponding type and producing a string (by recursively invoking subfunctions on contained subtypes).
+
+Dependency tree of function calls -- each implements the parenthised, and delegates to the indented:
+
+* print
+   * itemPrint (comments, blank-lines)
+      * metadataPrint
+      * annotationPrint (version, tuning, tempo)
+      * indicatorPrint (bar, segment, tuplet)
+      * soundPrint (continuation, rest, or ordinary)
+         * actPrint (basic, extra)
+         * pitchsPrint (list of: basic, extra)
+         * timePrint (basic, extra)
