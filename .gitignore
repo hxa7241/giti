@@ -1,0 +1,13 @@
+/_dev
+/temp
+/obj
+/libs
+
+*.cmxa
+*.cma
+*.cm[ixo]
+*.[ao]
+
+giti-o
+
+.DS_Store
