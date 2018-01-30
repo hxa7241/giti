@@ -28,7 +28,8 @@ Contents
 Overview
 --------
 
-Core datastructure: heterogeneous tree -- each object a different type, containing others. Following the spec, at http://www.hxa.name/giti :
+Core datastructure: heterogeneous tree -- each object a different type, 
+containing others. Following the spec, at http://www.hxa.name/giti :
 
 * Piece
    * Sound
@@ -53,7 +54,8 @@ Core datastructure: heterogeneous tree -- each object a different type, containi
    * Comment
    * (blank lines)
 
-Core algorithm (twofold): parse and print -- read a string into the datastructure, and write the datastructure to a string.
+Core algorithm (twofold): parse and print -- read a string into the 
+datastructure, and write the datastructure to a string.
 
 ~2500 lines of code.
 
@@ -89,7 +91,8 @@ Grouped, and in dependency order:
 Giti
 ----
 
-Main entry-point module. Implements command-line interface and invokes parsing and transforms. (Reads and writes files rather than stdio.).
+Main entry-point module. Implements command-line interface and invokes parsing 
+and transforms. (Reads and writes files rather than stdio.).
 
 7:1 scale code:
 
@@ -114,9 +117,12 @@ Main entry-point module. Implements command-line interface and invokes parsing a
 Parsing modules
 ---------------
 
-Mirrors the main data-structure-type-tree (inexactly: some elisions): a set of modules, each taking string data, and producing a specific algebraic datatype (by recursively invoking modules on contained subtypes).
+Mirrors the main data-structure-type-tree (inexactly: some elisions): a set of 
+modules, each taking string data, and producing a specific algebraic datatype 
+(by recursively invoking modules on contained subtypes).
 
-Dependency tree of parsing modules -- each implements the parenthised, and delegates to the indented:
+Dependency tree of parsing modules -- each implements the parenthised, and 
+delegates to the indented:
 
 * Piece (metadata, comments, blank-lines)
    * Annotation (version, tuning, tempo)
@@ -132,9 +138,12 @@ Dependency tree of parsing modules -- each implements the parenthised, and deleg
 Print module
 ------------
 
-Mirrors the main data-structure-type-tree (inexactly: some elisions): a set of functions, each taking its corresponding type and producing a string (by recursively invoking subfunctions on contained subtypes).
+Mirrors the main data-structure-type-tree (inexactly: some elisions): a set of 
+functions, each taking its corresponding type and producing a string (by 
+recursively invoking subfunctions on contained subtypes).
 
-Dependency tree of function calls -- each implements the parenthised, and delegates to the indented:
+Dependency tree of function calls -- each implements the parenthised, and 
+delegates to the indented:
 
 * print
    * itemPrint (comments, blank-lines)
